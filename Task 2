@@ -1,0 +1,57 @@
+#Housing Prices
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+def create_dataset(n_samples=500):
+    np.random.seed(42)
+    #Features
+    square_footage = np.random.randint(500, 4000, n_samples)  #Square footage
+    num_bedrooms = np.random.randint(1, 6, n_samples)  #Number of bedrooms
+    location_factor = np.random.choice([1.0, 1.2, 1.5], size=n_samples)  #Location multiplier (e.g., city tier)
+    #Target variable (price in thousands)
+    prices = (square_footage * 0.3 + num_bedrooms * 50 + location_factor * 100
+              + np.random.normal(0, 30, n_samples))  #Adding noise for realism
+    #Combine into a DataFrame
+    data = pd.DataFrame({
+        'SquareFootage': square_footage,
+        'NumBedrooms': num_bedrooms,
+        'LocationFactor': location_factor,
+        'Price': prices
+    })
+    return data
+#Generate the dataset
+dataset = create_dataset()
+#Split into features (X) and target (y)
+X = dataset[['SquareFootage', 'NumBedrooms', 'LocationFactor']]
+y = dataset['Price']
+#Split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+#Train the Linear Regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+#Make predictions
+y_pred = model.predict(X_test)
+#Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+#Display results
+print("Linear Regression Model")
+print("========================")
+print(f"Mean Squared Error: {mse:.2f}")
+print(f"R-squared Score: {r2:.2f}\n")
+print("Model Coefficients:")
+print(f"Square Footage Coefficient: {model.coef_[0]:.2f}")
+print(f"Number of Bedrooms Coefficient: {model.coef_[1]:.2f}")
+print(f"Location Factor Coefficient: {model.coef_[2]:.2f}")
+print(f"Intercept: {model.intercept_:.2f}")
+#Example Prediction
+example_input = pd.DataFrame({
+    'SquareFootage': [2000],
+    'NumBedrooms': [3],
+    'LocationFactor': [1.5]
+})
+predicted_price = model.predict(example_input)
+print(f"\nPredicted Price for Example Input: {predicted_price[0]:.2f} (in thousands)")
+
