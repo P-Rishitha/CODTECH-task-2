@@ -10,7 +10,7 @@
 
 ### **Overview of the Project**
 
-#### **Project**: Housing Price Prediction using Linear Regression  
+#### **Project**: Linear Regression Housing Prices  
 
 ![image](https://github.com/user-attachments/assets/bde447b5-28af-41b2-8952-6bfdb6c1acd1)
 
